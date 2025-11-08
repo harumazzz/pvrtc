@@ -154,5 +154,56 @@ namespace PVRTC {
             static_cast<uint8_t>((b << 4) | b));
     }
 
+    void Packet::set_color_alpha_color_rgba(const Rgba32 &color) {
+        const auto a = color.alpha >> 5;
+        if (a == 0x7)
+        {
+            const auto r = color.red >> 3;
+            const auto g = color.green >> 3;
+            const auto b = color.blue >> 4;
+            set_alpha(((r << 9) | (g << 4) | b));
+            set_color_alpha_is_opaque(true);
+            return;
+        }
+        const auto r = color.red >> 4;
+        const auto g = color.green >> 4;
+        const auto b = color.blue >> 5;
+        set_alpha(a << 11 | r << 7 | g << 3 | b);
+        set_color_alpha_is_opaque(false);
+    }
+
+    void Packet::set_color_blue_color_rgba(const Rgba32 &color) {
+        const auto a = color.alpha >> 5;
+        if (a == 0x7)
+        {
+            const auto r = color.red >> 3;
+            const auto g = color.green >> 3;
+            const auto b = color.blue >> 3;
+            set_blue(((r << 10) | (g << 5) | b));
+            set_color_blue_is_opaque(true);
+            return;
+        }
+        const auto r = color.red >> 4;
+        const auto g = color.green >> 4;
+        const auto b = color.blue >> 4;
+        set_blue(a << 12 | r << 8 | g << 4 | b);
+        set_color_blue_is_opaque(false);
+    }
+
+    void Packet::set_color_alpha_color_rgb(const Rgba32 &color) {
+        const auto r = color.red >> 3;
+        const auto g = color.green >> 3;
+        const auto b = color.blue >> 4;
+        set_alpha(((r << 9) | (g << 4) | b));
+        set_color_alpha_is_opaque(true);
+    }
+
+    void Packet::set_color_blue_color_rgb(const Rgba32 &color) {
+        const auto r = color.red >> 3;
+        const auto g = color.green >> 3;
+        const auto b = color.blue >> 3;
+        set_blue(((r << 10) | (g << 5) | b));
+        set_color_blue_is_opaque(true);
+    }
 
 }
